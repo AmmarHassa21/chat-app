@@ -1,0 +1,18 @@
+user token: 2|6xBr2oRRl54DIRZIYy6d6xrZCxrvapY2r6LNT4T11ebe182c~
+Test2 user token: 3|ZBesVHaqanTysn5DiELNvEXXcKJdTdwbpBjwfReu1d8b6f24
+
+6980787cd7230060be03acd6
+
+
+
+
+----Changes for Project----
+
+- 5-6 controllers
+- no package for token (need custom flow)
+- only request classes for request validation
+- no service pattern, no repository pattern
+- use api resources for every entity
+- separate route files for every module like auth, workspace, etc.
+- do not write nested routes
+- do not write custom connection for mongodb or gridfs connection
