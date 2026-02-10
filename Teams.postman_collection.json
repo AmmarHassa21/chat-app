@@ -1,0 +1,103 @@
+{
+  "info": {
+    "_postman_id": "93fad319-0c80-4966-8d12-2ca806eb9be5",
+    "name": "Teams",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "52016625",
+    "_collection_link": "https://go.postman.co/collection/52016625-93fad319-0c80-4966-8d12-2ca806eb9be5?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Create",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "B6sLOPOcNWQgCBEeD0Qy0xAzeWfBkKFgrviHoystTqX4N56JnfUkI3pSnJe8TfCyuu6EAxGnnDWfLhSn",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"workspace_id\": \"6989d7ed0b42f599290c03a8\",\r\n    \"name\": \"Backend Team\",\r\n    \"description\": \"Handling Laravel and MongoDB\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://127.0.0.1:8000/api/teams",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "teams"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "GET",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "B6sLOPOcNWQgCBEeD0Qy0xAzeWfBkKFgrviHoystTqX4N56JnfUkI3pSnJe8TfCyuu6EAxGnnDWfLhSn",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://127.0.0.1:8000/api/teams/6989ddfa0b42f599290c03aa",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "teams",
+            "6989ddfa0b42f599290c03aa"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Update",
+      "request": {
+        "method": "GET",
+        "header": []
+      },
+      "response": []
+    },
+    {
+      "name": "New Request",
+      "request": {
+        "method": "DELETE",
+        "header": []
+      },
+      "response": []
+    }
+  ]
+}

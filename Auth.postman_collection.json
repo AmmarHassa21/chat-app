@@ -1,0 +1,632 @@
+{
+  "info": {
+    "_postman_id": "f1eee77c-2c4a-4b91-bd0f-e5ae433b6649",
+    "name": "Auth",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "52016625",
+    "_collection_link": "https://go.postman.co/collection/52016625-f1eee77c-2c4a-4b91-bd0f-e5ae433b6649?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Register",
+      "item": [
+        {
+          "name": "Unique Check",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// 1. Check karein ke status code 422 hai (Validation Error)\r",
+                  "pm.test(\"Status code is 422 - Duplicate Entry Blocked\", function () {\r",
+                  "    pm.response.to.have.status(422);\r",
+                  "});\r",
+                  "\r",
+                  "// 2. Error Message Integrity Check\r",
+                  "pm.test(\"Validation error for unique email is present\", function () {\r",
+                  "    const jsonData = pm.response.json();\r",
+                  "    \r",
+                  "    // Check karein ke 'errors' object mojud hai\r",
+                  "    pm.expect(jsonData).to.have.property('errors');\r",
+                  "    \r",
+                  "    // Check karein ke email field par hi error aaya hai\r",
+                  "    pm.expect(jsonData.errors).to.have.property('email');\r",
+                  "    \r",
+                  "    // Check karein ke error message wahi hai jo Laravel default deta hai\r",
+                  "    pm.expect(jsonData.errors.email[0]).to.include(\"has already been taken\");\r",
+                  "});\r",
+                  "\r",
+                  "// 3. Negative Integrity Check (Data create nahi hona chahiye)\r",
+                  "pm.test(\"User and Token should not be in response\", function () {\r",
+                  "    const jsonData = pm.response.json();\r",
+                  "    pm.expect(jsonData.user).to.be.undefined;\r",
+                  "    pm.expect(jsonData.access_token).to.be.undefined;\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"name\": \"akifa\",\r\n  \"email\": \"akifa1@gmail.com\",\r\n  \"password\": \"secret123\",\r\n  \"password_confirmation\": \"secret123\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/register",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "register"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Pass Mismatch",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 422 - Validation Failed\", function () {\r",
+                  "    pm.response.to.have.status(422);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Specific error check\", function () {\r",
+                  "    const jsonData = pm.response.json();\r",
+                  "    \r",
+                  "    // Agar password bheja hi nahi toh 'required' check karega\r",
+                  "    // Agar bhej kar mismatch kiya toh 'confirmation' check karega\r",
+                  "    const errorMsg = jsonData.errors.password[0];\r",
+                  "    \r",
+                  "    const isRequiredError = errorMsg.includes(\"required\");\r",
+                  "    const isMismatchError = errorMsg.includes(\"confirmation does not match\");\r",
+                  "\r",
+                  "    pm.expect(isRequiredError || isMismatchError).to.be.true;\r",
+                  "    \r",
+                  "    console.log(\"Actual Error Message: \" + errorMsg);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"atika\",\r\n    \"email\": \"atika@gmail.com\",\r\n    \"password\": \"password123\",\r\n    \"password_confirmation\": \"different456\"\r\n}"
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/register",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "register"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Wrong Email",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Status 422 - Validation Error\", function () {\r",
+                  "    pm.response.to.have.status(422);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"Should return email validation error\", function () {\r",
+                  "    const jsonData = pm.response.json();\r",
+                  "    const errorMsg = jsonData.errors.email[0];\r",
+                  "\r",
+                  "    // Check karein ke error message mein 'required' ya 'valid email' mein se koi aik cheez ho\r",
+                  "    const isRequired = errorMsg.includes(\"required\");\r",
+                  "    const isInvalidFormat = errorMsg.includes(\"must be a valid email\");\r",
+                  "\r",
+                  "    pm.expect(isRequired || isInvalidFormat).to.be.true;\r",
+                  "    \r",
+                  "    // Console mein print karein taaki aap exact error dekh sakein\r",
+                  "    console.log(\"Email Error: \" + errorMsg);\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"name\": \"atika\",\r\n    \"email\": \"atika-wrong-format\", \r\n    \"password\": \"password123\",\r\n    \"password_confirmation\": \"password123\"\r\n}"
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/register",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "register"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Happy Case",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n  \"name\": \"muneeb\",\r\n  \"email\": \"muneeb@gmail.com\",\r\n  \"password\": \"secret123\",\r\n  \"password_confirmation\": \"secret123\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/register",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "register"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Login",
+      "item": [
+        {
+          "name": "Wrong Pass",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// 1. JSON check\r",
+                  "pm.test(\"Response is JSON\", function () {\r",
+                  "    pm.response.to.be.json;\r",
+                  "});\r",
+                  "\r",
+                  "// 2. Status Check\r",
+                  "pm.test(\"Status code is 422 - Validation Fail\", function () {\r",
+                  "    pm.response.to.have.status(422);\r",
+                  "});\r",
+                  "\r",
+                  "// 3. Error Message Check (Safe Version)\r",
+                  "pm.test(\"Check specific validation errors\", function () {\r",
+                  "    const jsonData = pm.response.json();\r",
+                  "    \r",
+                  "    // Check karein ke errors object mojud hai\r",
+                  "    pm.expect(jsonData).to.have.property('errors');\r",
+                  "\r",
+                  "    // Agar hum current_password ghalat bhej rahe hain:\r",
+                  "    if (jsonData.errors.current_password) {\r",
+                  "        pm.expect(jsonData.errors.current_password[0]).to.include(\"incorrect\");\r",
+                  "        console.log(\"Current Password Error: \" + jsonData.errors.current_password[0]);\r",
+                  "    } \r",
+                  "    // Agar masla password confirmation mein hai:\r",
+                  "    else if (jsonData.errors.password) {\r",
+                  "        pm.expect(jsonData.errors.password[0]).to.include(\"confirmation\");\r",
+                  "        console.log(\"New Password Error: \" + jsonData.errors.password[0]);\r",
+                  "    } \r",
+                  "   \r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "B6sLOPOcNWQgCBEeD0Qy0xAzeWfBkKFgrviHoystTqX4N56JnfUkI3pSnJe8TfCyuu6EAxGnnDWfLhSn",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"atika1@gmail.com\",\r\n    \"password\": \"secret\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/login",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "User Not Found",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// Kyunke aapki API 422 bhej rahi hai, hum test ko update kar dete hain\r",
+                  "pm.test(\"Status is 422 - User Not Found\", function () {\r",
+                  "    pm.response.to.have.status(422);\r",
+                  "});\r",
+                  "\r",
+                  "pm.test(\"No access token in response\", function () {\r",
+                  "    const jsonData = pm.response.json();\r",
+                  "    pm.expect(jsonData.access_token).to.be.undefined;\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "B6sLOPOcNWQgCBEeD0Qy0xAzeWfBkKFgrviHoystTqX4N56JnfUkI3pSnJe8TfCyuu6EAxGnnDWfLhSn",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\"email\": \"notfound@test.com\", \"password\": \"anypassword\"}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/login",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Empty Fields",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// 1. Status check (Laravel required fields par 422 bhejta hai)\r",
+                  "pm.test(\"Status 422 - Validation Required\", function () {\r",
+                  "    pm.response.to.have.status(422);\r",
+                  "});\r",
+                  "\r",
+                  "// 2. Error message check\r",
+                  "pm.test(\"Check for missing field errors\", function () {\r",
+                  "    const jsonData = pm.response.json();\r",
+                  "    \r",
+                  "    // Dono fields ke errors check karein\r",
+                  "    pm.expect(jsonData.errors).to.have.property('email');\r",
+                  "    pm.expect(jsonData.errors).to.have.property('password');\r",
+                  "    \r",
+                  "    // Check specific message (optional)\r",
+                  "    pm.expect(jsonData.errors.email[0]).to.include(\"required\");\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "B6sLOPOcNWQgCBEeD0Qy0xAzeWfBkKFgrviHoystTqX4N56JnfUkI3pSnJe8TfCyuu6EAxGnnDWfLhSn",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [
+              {
+                "key": "Accept",
+                "value": "application/json",
+                "type": "text"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"\",\r\n    \"password\": \"\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/login",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        },
+        {
+          "name": "Happy Case",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "// 1. Status Code Check\r",
+                  "pm.test(\"Status code is 200 - Login Successful\", function () {\r",
+                  "    pm.response.to.have.status(200);\r",
+                  "});\r",
+                  "\r",
+                  "// 2. Data Integrity Check (Updated for your response)\r",
+                  "pm.test(\"Response contains token and user info\", function () {\r",
+                  "    const jsonData = pm.response.json();\r",
+                  "    \r",
+                  "    // \"successful\" ya \"successfully\" dono ko accept karega\r",
+                  "    pm.expect(jsonData.message.toLowerCase()).to.include(\"success\");\r",
+                  "    \r",
+                  "    // Check User email\r",
+                  "    pm.expect(jsonData.user).to.have.property('email');\r",
+                  "    pm.expect(jsonData.user.email).to.eql(\"atika1@gmail.com\");\r",
+                  "    \r",
+                  "    // Check Token\r",
+                  "    pm.expect(jsonData).to.have.property('access_token');\r",
+                  "    pm.expect(jsonData.token_type).to.eql(\"Bearer\");\r",
+                  "});\r",
+                  "\r",
+                  "// 3. Automation\r",
+                  "pm.test(\"New token saved for future API calls\", function () {\r",
+                  "    const jsonData = pm.response.json();\r",
+                  "    if (jsonData.access_token) {\r",
+                  "        pm.environment.set(\"auth_token\", jsonData.access_token);\r",
+                  "    }\r",
+                  "});"
+                ],
+                "type": "text/javascript",
+                "packages": {},
+                "requests": {}
+              }
+            }
+          ],
+          "request": {
+            "auth": {
+              "type": "bearer",
+              "bearer": [
+                {
+                  "key": "token",
+                  "value": "B6sLOPOcNWQgCBEeD0Qy0xAzeWfBkKFgrviHoystTqX4N56JnfUkI3pSnJe8TfCyuu6EAxGnnDWfLhSn",
+                  "type": "string"
+                }
+              ]
+            },
+            "method": "POST",
+            "header": [],
+            "body": {
+              "mode": "raw",
+              "raw": "{\r\n    \"email\": \"atika1@gmail.com\",\r\n    \"password\": \"secret123\"\r\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            },
+            "url": {
+              "raw": "http://127.0.0.1:8000/api/login",
+              "protocol": "http",
+              "host": [
+                "127",
+                "0",
+                "0",
+                "1"
+              ],
+              "port": "8000",
+              "path": [
+                "api",
+                "login"
+              ]
+            }
+          },
+          "response": []
+        }
+      ]
+    },
+    {
+      "name": "Forget Password",
+      "request": {
+        "auth": {
+          "type": "noauth"
+        },
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"email\": \"muneeb@gmail.com\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://127.0.0.1:8000/api/forgot-password",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "forgot-password"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "New Request",
+      "request": {
+        "method": "GET",
+        "header": []
+      },
+      "response": []
+    },
+    {
+      "name": "New Request",
+      "request": {
+        "method": "GET",
+        "header": []
+      },
+      "response": []
+    }
+  ]
+}

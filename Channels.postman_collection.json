@@ -1,0 +1,112 @@
+{
+  "info": {
+    "_postman_id": "b59e4e81-1b1a-4256-adb8-ea8fe3dab2e9",
+    "name": "Channels",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "52016625",
+    "_collection_link": "https://go.postman.co/collection/52016625-b59e4e81-1b1a-4256-adb8-ea8fe3dab2e9?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Create",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "B6sLOPOcNWQgCBEeD0Qy0xAzeWfBkKFgrviHoystTqX4N56JnfUkI3pSnJe8TfCyuu6EAxGnnDWfLhSn",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"workspace_id\": \"6989d7ed0b42f599290c03a8\", \r\n    \"name\": \"general-chat\",\r\n    \"type\": \"public\",\r\n    \"description\": \"Company wide announcements\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://127.0.0.1:8000/api/channels",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "channels"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get",
+      "request": {
+        "method": "GET",
+        "header": []
+      },
+      "response": []
+    },
+    {
+      "name": "Update",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "B6sLOPOcNWQgCBEeD0Qy0xAzeWfBkKFgrviHoystTqX4N56JnfUkI3pSnJe8TfCyuu6EAxGnnDWfLhSn",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"name\": \"announcements-updated\",\r\n    \"description\": \"Only for important news\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://127.0.0.1:8000/api/channels/6989d81a0b42f599290c03a9",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "channels",
+            "6989d81a0b42f599290c03a9"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "New Request",
+      "request": {
+        "method": "DELETE",
+        "header": []
+      },
+      "response": []
+    }
+  ]
+}

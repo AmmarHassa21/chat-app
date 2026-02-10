@@ -1,4 +1,4 @@
-# syntax=docker/dockerfile:1
+# syntax=docker/dockerfile:1 # it tells which which syntax version will used
 FROM webdevops/php-apache:8.3
 
 WORKDIR /app

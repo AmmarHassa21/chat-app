@@ -1,0 +1,144 @@
+{
+  "info": {
+    "_postman_id": "857988c7-e3c4-4176-8261-03a8e54b2e88",
+    "name": "Workspaces",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+    "_exporter_id": "52016625",
+    "_collection_link": "https://go.postman.co/collection/52016625-857988c7-e3c4-4176-8261-03a8e54b2e88?source=collection_link"
+  },
+  "item": [
+    {
+      "name": "Create",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "B6sLOPOcNWQgCBEeD0Qy0xAzeWfBkKFgrviHoystTqX4N56JnfUkI3pSnJe8TfCyuu6EAxGnnDWfLhSn",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "POST",
+        "header": [
+          {
+            "key": "Accept",
+            "value": "application/json",
+            "type": "text"
+          }
+        ],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"name\": \"Programmer Force\",\r\n    \"description\": \"This is our main office workspace\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://127.0.0.1:8000/api/workspaces",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "workspaces"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Get",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "B6sLOPOcNWQgCBEeD0Qy0xAzeWfBkKFgrviHoystTqX4N56JnfUkI3pSnJe8TfCyuu6EAxGnnDWfLhSn",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "GET",
+        "header": [],
+        "url": {
+          "raw": "http://127.0.0.1:8000/api/workspaces/6989d6500b42f599290c03a7",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "workspaces",
+            "6989d6500b42f599290c03a7"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Update",
+      "request": {
+        "auth": {
+          "type": "bearer",
+          "bearer": [
+            {
+              "key": "token",
+              "value": "B6sLOPOcNWQgCBEeD0Qy0xAzeWfBkKFgrviHoystTqX4N56JnfUkI3pSnJe8TfCyuu6EAxGnnDWfLhSn",
+              "type": "string"
+            }
+          ]
+        },
+        "method": "PUT",
+        "header": [],
+        "body": {
+          "mode": "raw",
+          "raw": "{\r\n    \"name\": \"Programmer Force Updated\",\r\n    \"description\": \"Updated description here\"\r\n}",
+          "options": {
+            "raw": {
+              "language": "json"
+            }
+          }
+        },
+        "url": {
+          "raw": "http://127.0.0.1:8000/api/workspaces/6989d6500b42f599290c03a7",
+          "protocol": "http",
+          "host": [
+            "127",
+            "0",
+            "0",
+            "1"
+          ],
+          "port": "8000",
+          "path": [
+            "api",
+            "workspaces",
+            "6989d6500b42f599290c03a7"
+          ]
+        }
+      },
+      "response": []
+    },
+    {
+      "name": "Delete",
+      "request": {
+        "method": "GET",
+        "header": []
+      },
+      "response": []
+    }
+  ]
+}

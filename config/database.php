@@ -15,9 +15,9 @@ return [
             'database' => env('DB_DATABASE', 'chat_app'),
             'username' => env('DB_USERNAME', ''),
             'password' => env('DB_PASSWORD', ''),
-            'options' => [
-                'database' => env('DB_AUTHENTICATION_DATABASE', 'admin'),
-            ],
+            // 'options' => [
+            //     'database' => env('DB_AUTHENTICATION_DATABASE', 'admin'),
+            // ],
         ],
 
         'sqlite' => [
